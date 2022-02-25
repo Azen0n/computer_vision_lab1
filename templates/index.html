@@ -1,0 +1,70 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Лаб. работа №1</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static '../static/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static '../static/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '../static/css/bootstrap.css' %}">
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-5 mt-2">
+            <p><b>Загрузка и обработка изображений</b></p>
+
+            <hr>
+
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="image-form" class="form-label mt-2">Upload Image</label>
+                {{ image_form.image }}
+                <input class="btn btn-primary mt-2" type="submit" value="Upload">
+            </form>
+
+            {% if image %}
+            <div>
+                <p class="mt-4" id="image-label"><b>Image</b></p>
+                <img class="img-fluid mx-auto" src="{{ image }}" alt="" id="image">
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <p class="mt-2"><b>Scope</b></p>
+                    <canvas id="canvas" width="130" height="130"></canvas>
+                </div>
+                <div class="col">
+                    <p class="mt-2"><b>Center Pixel</b></p>
+                    <p id="coordinates"></p>
+                    <p id="rgb-values"></p>
+                    <p id="intensity"></p>
+                </div>
+                <div class="col">
+                    <p class="mt-2"><b>Scope Info</b></p>
+                    <p id="scope-info"></p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!--
+            <form action="" method="POST">
+                {% csrf_token %}
+                <label for="maxValue" class="form-label mt-2">Max Value</label>
+                {{ plot_form.max_value }}
+                <input class="btn btn-primary mt-2" type="submit" value="Update">
+            </form>
+            -->
+
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+<script src="{% static '../static/js/scope.js' %}"></script>
+</body>
+</html>
