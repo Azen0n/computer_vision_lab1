@@ -19,8 +19,8 @@ class UploadImageForm(forms.Form):
 
 
 def index(request):
-    # image = plots.uri
-    plot_form = PlotForm(request.POST or None)
+    plot = plots.get_name_plot()
+    # plot_form = PlotForm(request.POST or None)
     # if plot_form.is_valid():
     #     max_value = plot_form.cleaned_data.get('max_value')
     #     image = plots.get_plot(max_value)
@@ -36,6 +36,6 @@ def index(request):
         image_form = UploadImageForm()
 
     context = {'image': image,
-               'plot_form': plot_form,
+               'plot': plot,
                'image_form': image_form}
     return render(request, 'index.html', context)
