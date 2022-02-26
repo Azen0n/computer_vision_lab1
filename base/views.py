@@ -26,16 +26,27 @@ def index(request):
     #     image = plots.get_plot(max_value)
 
     image = None
+    horizontal_image = None
+    vertical_image = None
+    eight_pixels_blurred_image = None
+    four_pixels_blurred_image = None
     if request.method == 'POST':
         image_form = UploadImageForm(request.POST, request.FILES)
         if image_form.is_valid():
             file = request.FILES['image'].file
-            string = base64.b64encode(file.read())
-            image = 'data:image/png;base64,' + urllib.parse.quote(string)
+            image = 'data:image/png;base64,' + urllib.parse.quote(base64.b64encode(file.read()))
+            horizontal_image = plots.flip_horizontally(file)
+            vertical_image = plots.flip_vertically(file)
+            eight_pixels_blurred_image = plots.blur(file, number_of_blur_pixels=8)
+            four_pixels_blurred_image = plots.blur(file, number_of_blur_pixels=4)
     else:
         image_form = UploadImageForm()
 
     context = {'image': image,
+               'horizontal_image': horizontal_image,
+               'vertical_image': vertical_image,
+               'eight_pixels_blurred_image': eight_pixels_blurred_image,
+               'four_pixels_blurred_image': four_pixels_blurred_image,
                'plot': plot,
                'image_form': image_form}
     return render(request, 'index.html', context)

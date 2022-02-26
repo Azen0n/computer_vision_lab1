@@ -28,7 +28,7 @@
 
             {% if image %}
             <div>
-                <p class="mt-4" id="image-label"><b>Image</b></p>
+                <p class="mt-4" id="original-image-label"><b>Original Image</b></p>
                 <div class="image-container">
                     <img class="img-fluid" src="{{ image }}" alt="" id="image">
                 </div>
@@ -50,9 +50,38 @@
                     <p id="scope-info"></p>
                 </div>
             </div>
+
+            <hr>
+
+            <div class="container text-center">
+                <button class="btn btn-primary mt-2" type="submit" onclick="showHorizontallyFlippedImage()">
+                    Flip horizontally
+                </button>
+
+                <button class="btn btn-primary mt-2" type="submit" onclick="showVerticallyFlippedImage()">
+                    Flip vertically
+                </button>
+
+                <button class="btn btn-primary mt-2" type="submit" onclick="showEightPixelsBlurredImage()">
+                    Blur by 8 pixels
+                </button>
+
+                <button class="btn btn-primary mt-2" type="submit" onclick="showFourPixelsBlurredImage()">
+                    Blur by 4 pixels
+                </button>
+            </div>
+
+            <p class="mt-4" id="processed-image-label"></p>
+
+            <div class="image-container">
+                <img class="img-fluid" src="" alt="" id="processed_image">
+            </div>
+
             {% endif %}
 
+            <!--
             <img class="img-fluid mx-auto" src="{{ plot }}" alt="" id="plot">
+            -->
 
             <!--
             <form action="" method="POST">
@@ -70,5 +99,27 @@
 
 <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
 <script src="{% static '../static/js/scope.js' %}"></script>
+<script type="text/javascript">
+    function showHorizontallyFlippedImage() {
+        $("#processed_image").attr("src", "{{ horizontal_image }}");
+        $('#processed-image-label').html('<b>Processed Image</b>');
+    }
+
+    function showVerticallyFlippedImage() {
+        $("#processed_image").attr("src", "{{ vertical_image }}");
+        $('#processed-image-label').html('<b>Processed Image</b>');
+    }
+
+    function showEightPixelsBlurredImage() {
+        $("#processed_image").attr("src", "{{ eight_pixels_blurred_image }}");
+        $('#processed-image-label').html('<b>Processed Image</b>');
+    }
+
+    function showFourPixelsBlurredImage() {
+        $("#processed_image").attr("src", "{{ four_pixels_blurred_image }}");
+        $('#processed-image-label').html('<b>Processed Image</b>');
+    }
+
+</script>
 </body>
 </html>

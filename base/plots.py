@@ -2,6 +2,8 @@ import base64
 import io
 import random
 import urllib
+
+from PIL import Image, ImageDraw
 from matplotlib import pyplot as plt, font_manager
 from lab1.settings import BASE_DIR
 plt.rcParams.update({'font.size': 4})
@@ -57,3 +59,79 @@ def get_name_plot() -> str:
     rgb_plot_settings()
 
     return get_plot_as_string(fig)
+
+
+def flip_horizontally(file) -> str:
+    image = Image.open(file)
+    pixels = image.load()
+    new_image = Image.new('RGB', image.size)
+    draw = ImageDraw.Draw(new_image)
+    for i in range(image.width):
+        for j in range(image.height):
+            draw.point((i, image.height - 1 - j), (pixels[i, j]))
+
+    return image_to_string(new_image)
+
+
+def flip_vertically(file) -> str:
+    image = Image.open(file)
+    pixels = image.load()
+    new_image = Image.new('RGB', image.size)
+    draw = ImageDraw.Draw(new_image)
+    for i in range(image.width):
+        for j in range(image.height):
+            draw.point((image.width - 1 - i, j), (pixels[i, j]))
+
+    return image_to_string(new_image)
+
+
+def image_to_string(image: Image) -> str:
+    with io.BytesIO() as output:
+        image.save(output, format='png')
+        content = output.getvalue()
+
+    return 'data:image/png;base64,' + urllib.parse.quote(base64.b64encode(content))
+
+
+def is_in_image(x: int, y: int, image: Image) -> bool:
+    return 0 <= x < image.width and 0 <= y < image.height
+
+
+def get_eight_blur_pixels(x: int, y: int, image: Image, pixels) -> list[tuple[int, int, int]]:
+    blur_pixels = []
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if is_in_image(x + i, y + j, image):
+                blur_pixels.append(pixels[(x + i, y + j)])
+    return blur_pixels
+
+
+def get_four_blur_pixels(x: int, y: int, image: Image, pixels) -> list[tuple[int, int, int]]:
+    blur_pixels = []
+    blur_pixels_coordinates = [(x, y + 1), (x - 1, y), (x, y), (x + 1, y), (x, y - 1)]
+    for coordinates in blur_pixels_coordinates:
+        if is_in_image(*coordinates, image):
+            blur_pixels.append(pixels[coordinates])
+    return blur_pixels
+
+
+def blur(file, number_of_blur_pixels: int) -> str:
+    image = Image.open(file)
+    pixels = image.load()
+    new_image = Image.new('RGB', image.size)
+    draw = ImageDraw.Draw(new_image)
+
+    if number_of_blur_pixels == 4:
+        get_blur_pixels = get_four_blur_pixels
+    else:
+        get_blur_pixels = get_eight_blur_pixels
+
+    for i in range(image.width):
+        for j in range(image.height):
+            blur_pixels = get_blur_pixels(i, j, image, pixels)
+            rgb_values = [[color_values] for color_values in zip(*blur_pixels)]
+            mean_rgb_value = tuple(round(sum(color_values[0]) / len(color_values[0]))
+                                   for color_values in rgb_values)
+            draw.point((i, j), mean_rgb_value)
+
+    return image_to_string(new_image)
