@@ -7,3 +7,11 @@ body {
 p {
     font-size: 1.2em;
 }
+
+.container {
+    height: 7em;
+}
+
+.container .img-fluid {
+    max-height: 100%;
+}
