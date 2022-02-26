@@ -25,7 +25,11 @@
                 {{ image_form.image }}
                 <input class="btn btn-primary mt-2" type="submit" value="Upload">
             </form>
-
+            <button class="btn btn-dark mt-2">Яркость</button>
+            <form method="get">
+                  {% csrf_token %}
+                   <button type="submit">Daten importieren</button>
+              </form>
             {% if image %}
             <div>
                 <p class="mt-4" id="image-label"><b>Image</b></p>
@@ -48,9 +52,27 @@
                     <p id="scope-info"></p>
                 </div>
             </div>
+                <div class="row">
+                <div class="col">
+                    <p>R</p>
+                    <img class="img-fluid mx-auto" src="{{ plotR }}" alt="" id="plot">
+                </div>
+                <div class="col">
+                    <p>G</p>
+                    <img class="img-fluid mx-auto" src="{{ plotG }}" alt="" id="plot">
+                </div>
+                <div class="col">
+                    <p>B</p>
+                    <img class="img-fluid mx-auto" src="{{ plotB }}" alt="" id="plot">
+                </div>
+                <div class="col">
+                    <p>B</p>
+                    <img class="img-fluid mx-auto" src="{{ plotY }}" alt="" id="plot">
+                </div>
+            </div>
             {% endif %}
 
-            <img class="img-fluid mx-auto" src="{{ plot }}" alt="" id="plot">
+
 
             <!--
             <form action="" method="POST">
