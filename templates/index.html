@@ -15,9 +15,9 @@
     <div class="row">
         <div class="col"></div>
         <div class="col-7 mt-2">
-            <p><b>Загрузка и обработка изображений</b></p>
+            <p><b>R G B</b></p>
 
-            <hr>
+            <hr class="my-3">
 
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -28,7 +28,7 @@
 
             {% if image %}
             <div>
-                <p class="mt-4" id="original-image-label"><b>Original Image</b></p>
+                <p class="mt-4" id="original-image-label"><b>Original Image ({{ image_size }})</b></p>
                 <div class="image-container">
                     <img class="img-fluid" src="{{ image }}" alt="" id="image">
                 </div>
@@ -51,75 +51,189 @@
                 </div>
             </div>
 
-            <hr>
+            <hr class="my-5">
 
-            <div class="container text-center">
-                <button class="btn btn-primary mt-2" type="submit" onclick="showHorizontallyFlippedImage()">
-                    Flip horizontally
-                </button>
+            <div class="text-center">
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" name="btnradio" id="luminosity" autocomplete="off"
+                           onclick="luminosity()" checked>
+                    <label class="btn btn-outline-primary" for="luminosity">Luminosity</label>
 
-                <button class="btn btn-primary mt-2" type="submit" onclick="showVerticallyFlippedImage()">
-                    Flip vertically
-                </button>
+                    <input type="radio" class="btn-check" name="btnradio" id="red" autocomplete="off" onclick="red()">
+                    <label class="btn btn-outline-primary" for="red">Red</label>
 
-                <button class="btn btn-primary mt-2" type="submit" onclick="showEightPixelsBlurredImage()">
-                    Blur by 8 pixels
-                </button>
+                    <input type="radio" class="btn-check" name="btnradio" id="green" autocomplete="off"
+                           onclick="green()">
+                    <label class="btn btn-outline-primary" for="green">Green</label>
 
-                <button class="btn btn-primary mt-2" type="submit" onclick="showFourPixelsBlurredImage()">
-                    Blur by 4 pixels
-                </button>
+                    <input type="radio" class="btn-check" name="btnradio" id="blue" autocomplete="off" onclick="blue()">
+                    <label class="btn btn-outline-primary" for="blue">Blue</label>
+                </div>
+
+                <img class="img-fluid" src="{{ luminosity_plot }}" alt="" id="rgb_plot">
             </div>
 
-            <p class="mt-4" id="processed-image-label"></p>
+            <hr class="my-5">
 
-            <div class="image-container">
-                <img class="img-fluid" src="" alt="" id="processed_image">
+            <div class="container mt-2">
+                <div class="row">
+                    <div class="col text-start">
+                        <label class="col-form-label" for="blur_group">Blur Image</label>
+                    </div>
+                    <div class="col-8 text-end">
+                        <div class="btn-group w-100" role="group" id="blur_group">
+                            <button class="btn btn-outline-primary" type="submit" onclick="blurByEightPixels()">
+                                By 8 pixels around
+                            </button>
+                            <button class="btn btn-outline-primary" type="submit" onclick="blurByFourPixels()">
+                                By 4 pixels around
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label" for="flip_group">Flip Image</label>
+                    </div>
+                    <div class="col-8 text-end">
+                        <div class="btn-group w-100" role="group" id="flip_group">
+                            <button class="btn btn-outline-primary" type="submit" onclick="flipHorizontally()">
+                                Horizontally
+                            </button>
+
+                            <button class="btn btn-outline-primary" type="submit" onclick="flipVertically()">
+                                Vertically
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label" for="channels_exchange_group">Change Channels</label>
+                    </div>
+                    <div class="col-8 text-end">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="From -255 to 255"
+                                   id="change_channel">
+                            <button class="btn btn-outline-primary" type="button" id="change_intensity"
+                                    onclick="changeIntensity()">
+                                Intensity
+                            </button>
+                            <button class="btn btn-outline-primary" type="button" id="change_red" onclick="changeRed()">
+                                Red
+                            </button>
+                            <button class="btn btn-outline-primary" type="button" id="change_green"
+                                    onclick="changeGreen()">
+                                Green
+                            </button>
+                            <button class="btn btn-outline-primary" type="button" id="change_blue"
+                                    onclick="changeBlue()">
+                                Blue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label" for="channels_exchange_group">Exchange Channels</label>
+                    </div>
+                    <div class="col-8 text-end">
+                        <div class="input-group" id="channels_exchange_group">
+                            <select class="form-select" id="channel_from">
+                                <option selected>Select Channel</option>
+                                <option value="1">Red</option>
+                                <option value="2">Green</option>
+                                <option value="3">Blue</option>
+                            </select>
+                            <select class="form-select" id="channel_to">
+                                <option selected>Select Channel</option>
+                                <option value="1">Red</option>
+                                <option value="2">Green</option>
+                                <option value="3">Blue</option>
+                            </select>
+                            <button class="btn btn-outline-primary" type="button" id="change_channels"
+                                    onclick="exchangeChannelsGeneral()">
+                                Exchange
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label" for="negative_group">Channel Negative</label>
+                    </div>
+                    <div class="col-8 text-end">
+                        <div class="btn-group w-100" role="group" id="negative_group">
+                            <button class="btn btn-outline-primary" type="submit" onclick="intensityChannelNegative()">
+                                Intensity
+                            </button>
+                            <button class="btn btn-outline-primary" type="submit" onclick="redChannelNegative()">
+                                Red
+                            </button>
+                            <button class="btn btn-outline-primary" type="submit" onclick="greenChannelNegative()">
+                                Green
+                            </button>
+                            <button class="btn btn-outline-primary" type="submit" onclick="blueChannelNegative()">
+                                Blue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label" for="contrast_group">Image Contrast</label>
+                    </div>
+                    <div class="col-8 text-end">
+                        <div class="input-group" id="contrast_group">
+                            <input type="text" class="form-control" placeholder="From -100 to 100" id="contrast_value">
+                            <button class="btn btn-outline-primary" type="button" onclick="contrast()">
+                                Change
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-4" id="processed-image-label"><b>Processed Image</b></p>
+
+            <div class="canvas-container">
+                <canvas id="processed_image_canvas" height="0"></canvas>
             </div>
 
             {% endif %}
-
-            <!--
-            <img class="img-fluid mx-auto" src="{{ plot }}" alt="" id="plot">
-            -->
-
-            <!--
-            <form action="" method="POST">
-                {% csrf_token %}
-                <label for="maxValue" class="form-label mt-2">Max Value</label>
-                {{ plot_form.max_value }}
-                <input class="btn btn-primary mt-2" type="submit" value="Update">
-            </form>
-            -->
 
         </div>
         <div class="col"></div>
     </div>
 </div>
 
+<div class="footer"></div>
+
 <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
 <script src="{% static '../static/js/scope.js' %}"></script>
+<script src="{% static '../static/js/processing.js' %}"></script>
 <script type="text/javascript">
-    function showHorizontallyFlippedImage() {
-        $("#processed_image").attr("src", "{{ horizontal_image }}");
-        $('#processed-image-label').html('<b>Processed Image</b>');
+    function red() {
+        $("#rgb_plot").attr("src", "{{ red_plot }}");
     }
 
-    function showVerticallyFlippedImage() {
-        $("#processed_image").attr("src", "{{ vertical_image }}");
-        $('#processed-image-label').html('<b>Processed Image</b>');
+    function green() {
+        $("#rgb_plot").attr("src", "{{ green_plot }}");
     }
 
-    function showEightPixelsBlurredImage() {
-        $("#processed_image").attr("src", "{{ eight_pixels_blurred_image }}");
-        $('#processed-image-label').html('<b>Processed Image</b>');
+    function blue() {
+        $("#rgb_plot").attr("src", "{{ blue_plot }}");
     }
 
-    function showFourPixelsBlurredImage() {
-        $("#processed_image").attr("src", "{{ four_pixels_blurred_image }}");
-        $('#processed-image-label').html('<b>Processed Image</b>');
+    function luminosity() {
+        $("#rgb_plot").attr("src", "{{ luminosity_plot }}");
     }
-
 </script>
 </body>
 </html>

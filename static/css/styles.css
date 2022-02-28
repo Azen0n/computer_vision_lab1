@@ -17,3 +17,14 @@ p {
     display: block;
     max-height: 600px;
 }
+
+.canvas-container {
+    background: #F4F4F4;
+    display: flex;
+    justify-content: center;
+    max-height: 600px;
+}
+
+.footer {
+    height: 300px;
+}

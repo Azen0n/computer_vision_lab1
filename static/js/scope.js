@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     $('#image').mousemove(function (e) {
         let x = e.pageX - image.offsetLeft;
-        let y = e.pageY - image.offsetTop + 1;
+        let y = e.pageY - image.offsetTop;
         let pixels = changeScope(x, y);
         updateCenterPixelInfo(x, y);
         updateScopeInfo(image, x, y, pixels);

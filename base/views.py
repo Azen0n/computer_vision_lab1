@@ -1,5 +1,8 @@
 import base64
 import urllib
+
+from PIL import Image
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from . import plots
 from django import forms
@@ -19,34 +22,28 @@ class UploadImageForm(forms.Form):
 
 
 def index(request):
-    plot = plots.get_name_plot()
-    # plot_form = PlotForm(request.POST or None)
-    # if plot_form.is_valid():
-    #     max_value = plot_form.cleaned_data.get('max_value')
-    #     image = plots.get_plot(max_value)
-
     image = None
-    horizontal_image = None
-    vertical_image = None
-    eight_pixels_blurred_image = None
-    four_pixels_blurred_image = None
+    image_size = None
+    rgb_plots = [None, None, None]
+    luminosity_plot = None
+
     if request.method == 'POST':
         image_form = UploadImageForm(request.POST, request.FILES)
         if image_form.is_valid():
             file = request.FILES['image'].file
             image = 'data:image/png;base64,' + urllib.parse.quote(base64.b64encode(file.read()))
-            horizontal_image = plots.flip_horizontally(file)
-            vertical_image = plots.flip_vertically(file)
-            eight_pixels_blurred_image = plots.blur(file, number_of_blur_pixels=8)
-            four_pixels_blurred_image = plots.blur(file, number_of_blur_pixels=4)
+            image_size = Image.open(file).size
+            image_size = f'{image_size[0]}x{image_size[1]}'
+            rgb_plots = plots.get_rgb_plots(file)
+            luminosity_plot = plots.get_luminosity_plot(file)
     else:
         image_form = UploadImageForm()
 
     context = {'image': image,
-               'horizontal_image': horizontal_image,
-               'vertical_image': vertical_image,
-               'eight_pixels_blurred_image': eight_pixels_blurred_image,
-               'four_pixels_blurred_image': four_pixels_blurred_image,
-               'plot': plot,
+               'image_size': image_size,
+               'red_plot': rgb_plots[0],
+               'green_plot': rgb_plots[1],
+               'blue_plot': rgb_plots[2],
+               'luminosity_plot': luminosity_plot,
                'image_form': image_form}
     return render(request, 'index.html', context)
