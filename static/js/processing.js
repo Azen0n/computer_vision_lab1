@@ -4,6 +4,9 @@ canvas.width = image.width;
 canvas.height = image.height;
 const ctx = canvas.getContext('2d');
 
+$(document).ready(function () {
+    document.getElementById('image_row').placeholder = 'From 0 to ' + image.height;
+});
 
 function flipVertically() {
     for (let i = 0; i < image.width; i++) {
@@ -231,4 +234,25 @@ function changePixelContrast(pixelData, value) {
         }
     }
     return pixelData;
+}
+
+function getLuminosityOfRow() {
+    let row = parseInt(document.getElementById('image_row').value);
+    if (Number.isInteger(row)) {
+        if (row >= 0 && row < imageCanvas.height) {
+            let intensities = [];
+            for (let j = 0; j < image.width; j++) {
+                let pixelData = imageCanvas.getContext('2d').getImageData(row, j, 1, 1).data;
+                let intensity = (pixelData[0] + pixelData[1] + pixelData[2]) / 3;
+                intensities.push(intensity);
+            }
+            let luminositySum = 0;
+            for (const i in intensities) {
+                luminositySum += intensities[i];
+            }
+            console.log(luminositySum);
+            console.log(intensities.length);
+            $("#luminosity_value").html('Luminosity: ' + Math.round(luminositySum / intensities.length));
+        }
+    }
 }

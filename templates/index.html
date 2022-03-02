@@ -27,188 +27,213 @@
             </form>
 
             {% if image %}
-            <div>
-                <p class="mt-4" id="original-image-label"><b>Original Image ({{ image_size }})</b></p>
-                <div class="image-container">
-                    <img class="img-fluid" src="{{ image }}" alt="" id="image">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col">
-                    <p class="mt-2"><b>Scope</b></p>
-                    <canvas id="canvas" width="130" height="130"></canvas>
-                </div>
-                <div class="col">
-                    <p class="mt-2"><b>Center Pixel</b></p>
-                    <p id="coordinates"></p>
-                    <p id="rgb-values"></p>
-                    <p id="intensity"></p>
-                </div>
-                <div class="col">
-                    <p class="mt-2"><b>Scope Info</b></p>
-                    <p id="scope-info"></p>
-                </div>
-            </div>
-
-            <hr class="my-5">
-
-            <div class="text-center">
-                <div class="btn-group" role="group">
-                    <input type="radio" class="btn-check" name="btnradio" id="luminosity" autocomplete="off"
-                           onclick="luminosity()" checked>
-                    <label class="btn btn-outline-primary" for="luminosity">Luminosity</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="red" autocomplete="off" onclick="red()">
-                    <label class="btn btn-outline-primary" for="red">Red</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="green" autocomplete="off"
-                           onclick="green()">
-                    <label class="btn btn-outline-primary" for="green">Green</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="blue" autocomplete="off" onclick="blue()">
-                    <label class="btn btn-outline-primary" for="blue">Blue</label>
+                <div>
+                    <p class="mt-4" id="original-image-label"><b>Original Image</b></p>
+                    <div class="image-container">
+                        <img class="img-fluid" src="{{ image }}" alt="" id="image">
+                    </div>
                 </div>
 
-                <img class="img-fluid" src="{{ luminosity_plot }}" alt="" id="rgb_plot">
-            </div>
-
-            <hr class="my-5">
-
-            <div class="container mt-2">
                 <div class="row">
-                    <div class="col text-start">
-                        <label class="col-form-label" for="blur_group">Blur Image</label>
+                    <div class="col">
+                        <p class="mt-2"><b>Scope</b></p>
+                        <canvas id="canvas" width="130" height="130"></canvas>
                     </div>
-                    <div class="col-8 text-end">
-                        <div class="btn-group w-100" role="group" id="blur_group">
-                            <button class="btn btn-outline-primary" type="submit" onclick="blurByEightPixels()">
-                                By 8 pixels around
-                            </button>
-                            <button class="btn btn-outline-primary" type="submit" onclick="blurByFourPixels()">
-                                By 4 pixels around
-                            </button>
-                        </div>
+                    <div class="col">
+                        <p class="mt-2"><b>Center Pixel</b></p>
+                        <p id="coordinates"></p>
+                        <p id="rgb-values"></p>
+                        <p id="intensity"></p>
                     </div>
-                </div>
-
-                <div class="row mt-2">
-                    <div class="col text-start">
-                        <label class="col-form-label" for="flip_group">Flip Image</label>
-                    </div>
-                    <div class="col-8 text-end">
-                        <div class="btn-group w-100" role="group" id="flip_group">
-                            <button class="btn btn-outline-primary" type="submit" onclick="flipHorizontally()">
-                                Horizontally
-                            </button>
-
-                            <button class="btn btn-outline-primary" type="submit" onclick="flipVertically()">
-                                Vertically
-                            </button>
-                        </div>
+                    <div class="col">
+                        <p class="mt-2"><b>Scope Info</b></p>
+                        <p id="scope-info"></p>
                     </div>
                 </div>
 
-                <div class="row mt-2">
-                    <div class="col text-start">
-                        <label class="col-form-label" for="channels_exchange_group">Change Channels</label>
+                <hr class="my-5">
+
+                <div class="text-center">
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="btnradio" id="luminosity" autocomplete="off"
+                               onclick="luminosity()" checked>
+                        <label class="btn btn-outline-primary" for="luminosity">Luminosity</label>
+
+                        <input type="radio" class="btn-check" name="btnradio" id="red" autocomplete="off"
+                               onclick="red()">
+                        <label class="btn btn-outline-primary" for="red">Red</label>
+
+                        <input type="radio" class="btn-check" name="btnradio" id="green" autocomplete="off"
+                               onclick="green()">
+                        <label class="btn btn-outline-primary" for="green">Green</label>
+
+                        <input type="radio" class="btn-check" name="btnradio" id="blue" autocomplete="off"
+                               onclick="blue()">
+                        <label class="btn btn-outline-primary" for="blue">Blue</label>
                     </div>
-                    <div class="col-8 text-end">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="From -255 to 255"
-                                   id="change_channel">
-                            <button class="btn btn-outline-primary" type="button" id="change_intensity"
-                                    onclick="changeIntensity()">
-                                Intensity
-                            </button>
-                            <button class="btn btn-outline-primary" type="button" id="change_red" onclick="changeRed()">
-                                Red
-                            </button>
-                            <button class="btn btn-outline-primary" type="button" id="change_green"
-                                    onclick="changeGreen()">
-                                Green
-                            </button>
-                            <button class="btn btn-outline-primary" type="button" id="change_blue"
-                                    onclick="changeBlue()">
-                                Blue
-                            </button>
-                        </div>
-                    </div>
+
+                    <img class="img-fluid" src="{{ luminosity_plot }}" alt="" id="rgb_plot">
                 </div>
 
-                <div class="row mt-2">
-                    <div class="col text-start">
-                        <label class="col-form-label" for="channels_exchange_group">Exchange Channels</label>
-                    </div>
-                    <div class="col-8 text-end">
-                        <div class="input-group" id="channels_exchange_group">
-                            <select class="form-select" id="channel_from">
-                                <option selected>Select Channel</option>
-                                <option value="1">Red</option>
-                                <option value="2">Green</option>
-                                <option value="3">Blue</option>
-                            </select>
-                            <select class="form-select" id="channel_to">
-                                <option selected>Select Channel</option>
-                                <option value="1">Red</option>
-                                <option value="2">Green</option>
-                                <option value="3">Blue</option>
-                            </select>
-                            <button class="btn btn-outline-primary" type="button" id="change_channels"
-                                    onclick="exchangeChannelsGeneral()">
-                                Exchange
-                            </button>
+                <hr class="my-5">
+
+                <div class="container mt-2">
+                    <div class="row">
+                        <div class="col text-start">
+                            <label class="col-form-label" for="blur_group">Blur Image</label>
+                        </div>
+                        <div class="col-8 text-end">
+                            <div class="btn-group w-100" role="group" id="blur_group">
+                                <button class="btn btn-outline-primary" type="submit" onclick="blurByEightPixels()">
+                                    By 8 pixels around
+                                </button>
+                                <button class="btn btn-outline-primary" type="submit" onclick="blurByFourPixels()">
+                                    By 4 pixels around
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row mt-2">
-                    <div class="col text-start">
-                        <label class="col-form-label" for="negative_group">Channel Negative</label>
-                    </div>
-                    <div class="col-8 text-end">
-                        <div class="btn-group w-100" role="group" id="negative_group">
-                            <button class="btn btn-outline-primary" type="submit" onclick="intensityChannelNegative()">
-                                Intensity
-                            </button>
-                            <button class="btn btn-outline-primary" type="submit" onclick="redChannelNegative()">
-                                Red
-                            </button>
-                            <button class="btn btn-outline-primary" type="submit" onclick="greenChannelNegative()">
-                                Green
-                            </button>
-                            <button class="btn btn-outline-primary" type="submit" onclick="blueChannelNegative()">
-                                Blue
-                            </button>
+                    <div class="row mt-2">
+                        <div class="col text-start">
+                            <label class="col-form-label" for="flip_group">Flip Image</label>
+                        </div>
+                        <div class="col-8 text-end">
+                            <div class="btn-group w-100" role="group" id="flip_group">
+                                <button class="btn btn-outline-primary" type="submit" onclick="flipHorizontally()">
+                                    Horizontally
+                                </button>
+
+                                <button class="btn btn-outline-primary" type="submit" onclick="flipVertically()">
+                                    Vertically
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row mt-2">
-                    <div class="col text-start">
-                        <label class="col-form-label" for="contrast_group">Image Contrast</label>
-                    </div>
-                    <div class="col-8 text-end">
-                        <div class="input-group" id="contrast_group">
-                            <input type="text" class="form-control" placeholder="From -100 to 100" id="contrast_value">
-                            <button class="btn btn-outline-primary" type="button" onclick="contrast()">
-                                Change
-                            </button>
+                    <div class="row mt-2">
+                        <div class="col text-start">
+                            <label class="col-form-label" for="channels_exchange_group">Change Channels</label>
                         </div>
-
+                        <div class="col-8 text-end">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="From -255 to 255"
+                                       id="change_channel">
+                                <button class="btn btn-outline-primary" type="button" id="change_intensity"
+                                        onclick="changeIntensity()">
+                                    Intensity
+                                </button>
+                                <button class="btn btn-outline-primary" type="button" id="change_red"
+                                        onclick="changeRed()">
+                                    Red
+                                </button>
+                                <button class="btn btn-outline-primary" type="button" id="change_green"
+                                        onclick="changeGreen()">
+                                    Green
+                                </button>
+                                <button class="btn btn-outline-primary" type="button" id="change_blue"
+                                        onclick="changeBlue()">
+                                    Blue
+                                </button>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="row mt-2">
+                        <div class="col text-start">
+                            <label class="col-form-label" for="channels_exchange_group">Exchange Channels</label>
+                        </div>
+                        <div class="col-8 text-end">
+                            <div class="input-group" id="channels_exchange_group">
+                                <select class="form-select" id="channel_from">
+                                    <option selected>Select Channel</option>
+                                    <option value="1">Red</option>
+                                    <option value="2">Green</option>
+                                    <option value="3">Blue</option>
+                                </select>
+                                <select class="form-select" id="channel_to">
+                                    <option selected>Select Channel</option>
+                                    <option value="1">Red</option>
+                                    <option value="2">Green</option>
+                                    <option value="3">Blue</option>
+                                </select>
+                                <button class="btn btn-outline-primary" type="button" id="change_channels"
+                                        onclick="exchangeChannelsGeneral()">
+                                    Exchange
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col text-start">
+                            <label class="col-form-label" for="negative_group">Channel Negative</label>
+                        </div>
+                        <div class="col-8 text-end">
+                            <div class="btn-group w-100" role="group" id="negative_group">
+                                <button class="btn btn-outline-primary" type="submit"
+                                        onclick="intensityChannelNegative()">
+                                    Intensity
+                                </button>
+                                <button class="btn btn-outline-primary" type="submit" onclick="redChannelNegative()">
+                                    Red
+                                </button>
+                                <button class="btn btn-outline-primary" type="submit" onclick="greenChannelNegative()">
+                                    Green
+                                </button>
+                                <button class="btn btn-outline-primary" type="submit" onclick="blueChannelNegative()">
+                                    Blue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col text-start">
+                            <label class="col-form-label" for="contrast_group">Image Contrast</label>
+                        </div>
+                        <div class="col-8 text-end">
+                            <div class="input-group" id="contrast_group">
+                                <input type="text" class="form-control" placeholder="From -100 to 100"
+                                       id="contrast_value">
+                                <button class="btn btn-outline-primary" type="button" onclick="contrast()">
+                                    Change
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col text-start">
+                            <label class="col-form-label" for="luminosity_group">Luminosity of row</label>
+                        </div>
+                        <div class="col-8 text-end">
+                            <div class="input-group" id="luminosity_group">
+                                <input type="text" class="form-control"
+                                       id="image_row">
+                                <button class="btn btn-outline-primary" type="button"
+                                        onclick="getLuminosityOfRow()">
+                                    Show
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col text-start mt-2">
+                            <p class="value" id="luminosity_value"></p>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
 
-            <p class="mt-4" id="processed-image-label"><b>Processed Image</b></p>
+                <p class="mt-4" id="processed-image-label"><b>Processed Image</b></p>
 
-            <div class="canvas-container">
-                <canvas id="processed_image_canvas" height="0"></canvas>
-            </div>
+                <div class="canvas-container">
+                    <canvas id="processed_image_canvas" height="0"></canvas>
+                </div>
 
-            <div class="text-center">
-                <p><small>Right-click on processed image to save.</small></p>
-            </div>
+                <div class="text-center">
+                    <p><small>Right-click on processed image to save.</small></p>
+                </div>
 
             {% endif %}
 
