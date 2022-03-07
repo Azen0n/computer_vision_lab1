@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static '../static/css/styles.css' %}">
     <link rel="stylesheet" href="{% static '../static/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static '../static/css/bootstrap.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -48,6 +49,7 @@
                 <div class="col">
                     <p class="mt-2"><b>Scope Info</b></p>
                     <p id="scope-info"></p>
+                    <canvas id="scope_plot" width="400" height="300"></canvas>
                 </div>
             </div>
 
@@ -223,6 +225,8 @@
 <script src="{% static '../static/js/scope.js' %}"></script>
 <script src="{% static '../static/js/processing.js' %}"></script>
 <script type="text/javascript">
+    let chart;
+
     function red() {
         $("#rgb_plot").attr("src", "{{ red_plot }}");
     }
@@ -238,6 +242,46 @@
     function luminosity() {
         $("#rgb_plot").attr("src", "{{ luminosity_plot }}");
     }
+
+    image.addEventListener('click', function (e) {
+        let x = e.pageX - image.offsetLeft;
+        let y = e.pageY - image.offsetTop;
+
+        let pixels = changeScope(x, y);
+
+        let valDict = {};
+        for (let i = 0; i < 256; i++) {
+            valDict[i] = 0;
+        }
+
+        for (const pixel of pixels) {
+            valDict[Math.round((pixel[0] + pixel[1] + pixel[2]) / 3)] += 1;
+        }
+
+        let plotCtx = document.getElementById('scope_plot').getContext('2d');
+
+        if (chart instanceof Chart) {
+            chart.destroy();
+        }
+        chart = new Chart(plotCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(valDict),
+                datasets: [{
+                    label: 'Scope Intensity',
+                    data: Object.values(valDict),
+                    backgroundColor: '#4285f4',
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
 </script>
 </body>
 </html>

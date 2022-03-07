@@ -49,3 +49,20 @@ def index(request):
                'luminosity_plot': luminosity_plot,
                'image_form': image_form}
     return render(request, 'index.html', context)
+
+
+def scope_plot(request):
+    image_string = request.GET.get['image']
+    x, y = request.GET.get['x'], request.GET.get['y']
+
+    image = urllib.parse.unquote(image_string)[22:]
+    image = base64.decode(image)
+    img = Image.open(image)
+    pixels = img.load()
+    intensities = []
+
+    for i in range(-5, 5):
+        for j in range(-5, 5):
+            rgb = pixels[x + i, y + j]
+            intensity = (rgb[0] + rgb[1] + rgb[2]) / 3
+            intensities.append(intensity)
