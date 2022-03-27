@@ -1,13 +1,13 @@
 import base64
 import urllib
-from datetime import datetime
 
 from PIL import Image
-from django.core.files.storage import FileSystemStorage
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse
 from django.shortcuts import render
 from . import plots
 from django import forms
+
+from .lab2_processing import methods
 
 
 class PlotForm(forms.Form):
@@ -51,18 +51,16 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-def scope_plot(request):
-    image_string = request.GET.get['image']
-    x, y = request.GET.get['x'], request.GET.get['y']
+def processing(request):
+    image_file = request.FILES.get('image')
+    method = request.POST.get('method')
+    param = request.POST.get('param')
+    image = Image.open(image_file)
 
-    image = urllib.parse.unquote(image_string)[22:]
-    image = base64.decode(image)
-    img = Image.open(image)
-    pixels = img.load()
-    intensities = []
+    if param is None:
+        processed_image = methods[method](image)
+    else:
+        processed_image = methods[method](image, int(param))
 
-    for i in range(-5, 5):
-        for j in range(-5, 5):
-            rgb = pixels[x + i, y + j]
-            intensity = (rgb[0] + rgb[1] + rgb[2]) / 3
-            intensities.append(intensity)
+    context = {'image': processed_image}
+    return JsonResponse(context)
