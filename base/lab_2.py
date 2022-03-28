@@ -340,6 +340,7 @@ def forward_logarithmic_transformation2(gammat):
 import cmath
 import numpy as np
 
+
 def getbar(img):
     values = [0 for i in range(256)]
     x = [i for i in range(256)]
@@ -348,9 +349,10 @@ def getbar(img):
     pix = img.load()
     for i in range(M):
         for j in range(N):
-            values[pix[i,j]] +=1
-    plt.bar(x,values,alpha = 1)
+            values[pix[i, j]] += 1
+    plt.bar(x, values, alpha=1)
     plt.show()
+
 
 def direct_fourier_transform():
     image = Image.open("123123.jpg")
@@ -407,6 +409,7 @@ def Pref(image):
             draw.point((width - 1 - i, height - 1 - j), (255 - pix[i, j]))
     return im
 
+
 def back_fourier_transform(f):
     image = Image.open("123123.jpg")
     image = image.convert('L')
@@ -448,7 +451,24 @@ def back_fourier_transform(f):
     im.show()
     return im
 
-image = Image.open("123123.jpg")
-image = image.convert('L')
-getHits(back_fourier_transform(direct_fourier_transform()))
-#getHits(image)
+
+def cutting_out_range(a, b,value):
+    image = Image.open("1.png")
+    image = image.convert('RGB')
+    M = image.size[0]
+    N = image.size[1]
+    im = Image.new('RGB', (M, N))
+    draw = ImageDraw.Draw(im)
+    pix = image.load()
+    for i in range(M):
+        for j in range(N):
+            pl = 0.3 * pix[i, j][0] + 0.59 * pix[i, j][1] + 0.11 * pix[i, j][2]
+            if(round(pl) in range(a,b+1)):
+                draw.point((i,j),(255,255,255))
+            else:
+                if (value == -1):
+                    draw.point((i, j), (pix[i,j]))
+                else:
+                    draw.point((i, j), (value,value,value))
+    im.show()
+cutting_out_range(120, 200, 150)
