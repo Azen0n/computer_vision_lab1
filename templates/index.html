@@ -275,6 +275,25 @@
 
                 <div class="row mt-2">
                     <div class="col text-start">
+                        <label class="col-form-label">Cutting Out Luma Range</label>
+                    </div>
+                    <div class="col-7 text-end">
+                        <div class="input-group" id="cuttingOutLumaRangeGroup">
+                            <input type="text" class="form-control" placeholder="From 0 to 255"
+                                   id="cuttingOutLumaRangeStartInput">
+                            <input type="text" class="form-control" placeholder="From start to 255"
+                                   id="cuttingOutLumaRangeEndInput">
+                            <input type="text" class="form-control" placeholder="Default Empty"
+                                   id="cuttingOutLumaRangeConstantValueInput">
+                            <button class="btn btn-outline-primary" type="submit" id="cuttingOutLumaRangeBtn">
+                                Transform
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
                         <label class="col-form-label">Square Filter</label>
                     </div>
                     <div class="col-7 text-end">
@@ -308,6 +327,86 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label">Gaussian Filter</label>
+                    </div>
+                    <div class="col-7 text-end">
+                        <div class="input-group" id="gaussianFilterGroup">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Sigma</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Greater than 0"
+                                   id="gaussianFilterInput">
+                            <button class="btn btn-outline-primary" type="submit" id="gaussianFilterBtn">
+                                Transform
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label">Sigma Filter</label>
+                    </div>
+                    <div class="col-7 text-end">
+                        <div class="input-group" id="sigmaFilterGroup">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Sigma</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Greater than 0"
+                                   id="sigmaFilterInput">
+                            <button class="btn btn-outline-primary" type="submit" id="sigmaFilterBtn" disabled>
+                                Transform
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label">Unsharp Masking</label>
+                    </div>
+                    <div class="col-7 text-end">
+                        <div class="input-group" id="unsharpMaskingGroup1">
+                            <select class="form-select" id="unsharpMaskingInput1">
+                                <option selected>Select filter</option>
+                                <option value="square_filter">Square Filter</option>
+                                <option value="median_filter">Median Filter</option>
+                            </select>
+                            <input type="text" class="form-control" placeholder="Contrast (percent)" id="unsharpMaskingContrastInput1">
+                            <select class="form-select" id="unsharpMaskingKernelInput">
+                                <option selected>Select kernel size</option>
+                                <option value="3">3x3</option>
+                                <option value="5">5x5</option>
+                            </select>
+
+                            <button class="btn btn-outline-primary" type="submit" id="unsharpMaskingBtn1">
+                                Transform
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start"></div>
+                    <div class="col-7 text-end">
+                        <div class="input-group" id="unsharpMaskingGroup2">
+                            <select class="form-select" id="unsharpMaskingInput2">
+                                <option selected>Select filter</option>
+                                <option value="gaussian_filter">Gaussian Filter</option>
+                                <option value="sigma_filter">Sigma Filter</option>
+                            </select>
+                            <input type="text" class="form-control" placeholder="Contrast (percent)" id="unsharpMaskingContrastInput2">
+                            <input type="text" class="form-control" placeholder="Sigma" id="unsharpMaskingSigmaInput">
+
+                            <button class="btn btn-outline-primary" type="submit" id="unsharpMaskingBtn2">
+                                Transform
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <p class="mt-4" id="processed-image-label"><b>Processed Image</b></p>
@@ -332,7 +431,6 @@
 <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
 <script src="{% static '../static/js/scope.js' %}"></script>
 <script src="{% static '../static/js/processing.js' %}"></script>
-<script src="{% static '../static/js/driver.js' %}"></script>
 <script type="text/javascript">
     let chart;
 
@@ -399,6 +497,12 @@
     let bitPlaneSlicingBtn = document.getElementById('bitPlaneSlicingBtn');
     let squareFilterBtn = document.getElementById('squareFilterBtn');
     let medianFilterBtn = document.getElementById('medianFilterBtn');
+    let cuttingOutLumaRangeBtn = document.getElementById('cuttingOutLumaRangeBtn');
+    let gaussianFilterBtn = document.getElementById('gaussianFilterBtn');
+    let sigmaFilterBtn = document.getElementById('sigmaFilterBtn');
+    let unsharpMaskingBtn1 = document.getElementById('unsharpMaskingBtn1');
+    let unsharpMaskingBtn2 = document.getElementById('unsharpMaskingBtn2');
+
 
     logBtn.addEventListener('click', function () {
         getProcessedImage('log/', 'log');
@@ -431,6 +535,41 @@
     medianFilterBtn.addEventListener('click', function () {
         let param = parseInt(document.getElementById('medianFilterInput').value);
         getProcessedImage('median_filter/', 'median_filter', param);
+    });
+
+    cuttingOutLumaRangeBtn.addEventListener('click', function () {
+        let start = parseInt(document.getElementById('cuttingOutLumaRangeStartInput').value);
+        let end = parseInt(document.getElementById('cuttingOutLumaRangeEndInput').value);
+        let constantValue = parseInt(document.getElementById('cuttingOutLumaRangeConstantValueInput').value);
+        if (isNaN(constantValue)) {
+            getProcessedImage('cutting_out_luma_range/', 'cutting_out_luma_range', [start, end]);
+        } else {
+            getProcessedImage('cutting_out_luma_range/', 'cutting_out_luma_range', [start, end, constantValue]);
+        }
+    });
+
+    gaussianFilterBtn.addEventListener('click', function () {
+        let param = parseFloat(document.getElementById('gaussianFilterInput').value);
+        getProcessedImage('gaussian_filter/', 'gaussian_filter', param);
+    });
+
+    sigmaFilterBtn.addEventListener('click', function () {
+        let param = parseFloat(document.getElementById('sigmaFilterInput').value);
+        getProcessedImage('sigma_filter/', 'sigma_filter', param);
+    });
+
+    unsharpMaskingBtn1.addEventListener('click', function () {
+        let method = document.getElementById('unsharpMaskingInput1').value;
+        let contrast = parseInt(document.getElementById('unsharpMaskingContrastInput1').value);
+        let kernel = parseInt(document.getElementById('unsharpMaskingKernelInput').value);
+        getProcessedImage('unsharp_masking/', 'unsharp_masking', [contrast, method, kernel]);
+    });
+
+    unsharpMaskingBtn2.addEventListener('click', function () {
+        let method = document.getElementById('unsharpMaskingInput2').value;
+        let contrast = parseInt(document.getElementById('unsharpMaskingContrastInput2').value);
+        let sigma = parseFloat(document.getElementById('unsharpMaskingSigmaInput').value);
+        getProcessedImage('unsharp_masking/', 'unsharp_masking', [contrast, method, sigma]);
     });
 
     function getProcessedImage(url, method, param = null) {

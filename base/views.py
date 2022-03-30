@@ -7,7 +7,7 @@ from django.shortcuts import render
 from . import plots
 from django import forms
 
-from .lab2_processing import methods
+from .lab2_processing import methods, get_image_as_string
 
 
 class PlotForm(forms.Form):
@@ -54,13 +54,24 @@ def index(request):
 def processing(request):
     image_file = request.FILES.get('image')
     method = request.POST.get('method')
-    param = request.POST.get('param')
+    params = request.POST.get('param')
     image = Image.open(image_file)
 
-    if param is None:
+    params = params.split(',')
+    new_params = []
+    for param in params:
+        try:
+            new_params.append(int(param))
+        except:
+            try:
+                new_params.append(float(param))
+            except:
+                new_params.append(param)
+
+    if new_params is None:
         processed_image = methods[method](image)
     else:
-        processed_image = methods[method](image, int(param))
+        processed_image = get_image_as_string(methods[method](image, *new_params))
 
     context = {'image': processed_image}
     return JsonResponse(context)
