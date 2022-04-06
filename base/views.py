@@ -7,7 +7,7 @@ from django.shortcuts import render
 from . import plots
 from django import forms
 
-from .lab2_processing import methods, get_image_as_string
+from .lab2_processing import methods, get_image_as_string, mean_squared_error, mean_absolute_error, delta
 
 
 class PlotForm(forms.Form):
@@ -57,21 +57,40 @@ def processing(request):
     params = request.POST.get('param')
     image = Image.open(image_file)
 
-    params = params.split(',')
-    new_params = []
-    for param in params:
-        try:
-            new_params.append(int(param))
-        except:
-            try:
-                new_params.append(float(param))
-            except:
-                new_params.append(param)
-
-    if new_params is None:
-        processed_image = methods[method](image)
+    if params is None:
+        processed_image = get_image_as_string(methods[method](image))
     else:
+        params = params.split(',')
+        new_params = []
+        for param in params:
+            try:
+                new_params.append(int(param))
+            except:
+                try:
+                    new_params.append(float(param))
+                except:
+                    new_params.append(param)
         processed_image = get_image_as_string(methods[method](image, *new_params))
 
     context = {'image': processed_image}
+    return JsonResponse(context)
+
+
+def metric(request):
+    metric_ = request.POST.get('metric')
+    image_file = request.FILES.get('image')
+    image = Image.open(image_file)
+
+    processed_image_file = request.FILES.get('processedImage')
+    processed_image = Image.open(processed_image_file)
+
+    ans = None
+    if metric_ == 'mean_squared_error':
+        ans = mean_squared_error(image, processed_image)
+    elif metric_ == 'mean_absolute_error':
+        ans = mean_absolute_error(image, processed_image)
+    elif metric_ == 'delta':
+        ans = delta(image, processed_image)
+
+    context = {'ans': ans}
     return JsonResponse(context)
