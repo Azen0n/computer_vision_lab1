@@ -58,11 +58,22 @@ def unsharp_masking(image: Image, contrast_percent: int, blur_method_name: str, 
     blurred_image_pixels = np.asarray(blurred_image).astype(int)
     diff = image_pixels - blurred_image_pixels
 
-    # new_image_pixels = np.asarray(image) * (1 + contrast_percent) - contrast_percent * np.asarray(blurred_image)
     new_image_pixels = image_pixels + contrast_percent * diff
     new_image = Image.fromarray(np.uint8(new_image_pixels), 'L')
 
     return new_image
+
+
+def noise(image: Image) -> Image:
+    image = image.convert('L')
+    pixels = np.asarray(image).astype(int)
+    noise_mask = np.random.random((image.height, image.width))
+    noise_mask[noise_mask > 0.95] = 255
+    noise_mask[noise_mask != 255] = 0
+    new_pixels = pixels - noise_mask
+    new_pixels[new_pixels < 0] = 0
+
+    return Image.fromarray(np.uint8(new_pixels), 'L')
 
 
 methods = {
@@ -77,4 +88,5 @@ methods = {
     'gaussian_filter': blur.gaussian_filter,
     'sigma_filter': blur.sigma_filter,
     'unsharp_masking': unsharp_masking,
+    'noise': noise,
 }

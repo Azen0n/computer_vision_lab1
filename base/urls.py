@@ -15,4 +15,5 @@ urlpatterns = [
     path('sigma_filter/', views.processing, name='sigma_filter'),
     path('unsharp_masking/', views.processing, name='unsharp_masking'),
     path('metric/', views.metric, name='metric'),
+    path('noise/', views.processing, name='noise'),
 ]

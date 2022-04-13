@@ -425,7 +425,7 @@
                 <div class="row mt-2">
                     <div class="col text-start"></div>
                     <div class="col-7 text-end">
-                        <div class="input-group w-100" id="metricGroup">
+                        <div class="btn-group w-100" role="group" id="metricGroup">
                             <button class="btn btn-outline-primary" type="submit" id="DeltaBtn">
                                 Delta
                             </button>
@@ -436,6 +436,17 @@
                                 MAE
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col text-start">
+                        <label class="col-form-label">Noise</label>
+                    </div>
+                    <div class="col-7 text-end">
+                        <button class="btn btn-outline-primary w-100" type="submit" id="noiseBtn">
+                            Add
+                        </button>
                     </div>
                 </div>
             </div>
@@ -538,6 +549,8 @@
     let MAEBtn = document.getElementById('MAEBtn');
     let DeltaBtn = document.getElementById('DeltaBtn');
 
+    let noiseBtn = document.getElementById('noiseBtn');
+
     MSEBtn.addEventListener('click', function () {
         metricInfo('mean_squared_error');
     });
@@ -614,7 +627,7 @@
 
     unsharpMaskingBtn2.addEventListener('click', function () {
         let method = document.getElementById('unsharpMaskingInput2').value;
-        let contrast = parseInt(document.getElementById('unsharpMaskingContrastInput2').value);
+        let contrast = parseFloat(document.getElementById('unsharpMaskingContrastInput2').value);
         let sigma = parseFloat(document.getElementById('unsharpMaskingSigmaInput').value);
         let kernelSize = parseFloat(document.getElementById('unsharpMaskingKernelInput2').value);
 
@@ -623,6 +636,10 @@
         } else {
             getProcessedImage('unsharp_masking/', 'unsharp_masking', [contrast, method, sigma, kernelSize]);
         }
+    });
+
+    noiseBtn.addEventListener('click', function () {
+        getProcessedImage('noise/', 'noise');
     });
 
     function getProcessedImage(url, method, param = null) {
