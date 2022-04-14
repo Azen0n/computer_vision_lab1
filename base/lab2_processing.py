@@ -59,6 +59,8 @@ def unsharp_masking(image: Image, contrast_percent: int, blur_method_name: str, 
     diff = image_pixels - blurred_image_pixels
 
     new_image_pixels = image_pixels + contrast_percent * diff
+    new_image_pixels[new_image_pixels < 0] = 0
+    new_image_pixels[new_image_pixels > 255] = 255
     new_image = Image.fromarray(np.uint8(new_image_pixels), 'L')
 
     return new_image
