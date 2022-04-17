@@ -7,7 +7,10 @@ from django.shortcuts import render
 from . import plots
 from django import forms
 
-from .lab2_processing import methods, get_image_as_string, mean_squared_error, mean_absolute_error, delta
+from base.lab2.lab2_processing import methods as methods2, get_image_as_string, mean_squared_error, mean_absolute_error, delta
+from base.lab3 import methods as methods3
+
+methods = dict(methods2).update(methods3)
 
 
 class PlotForm(forms.Form):
@@ -23,7 +26,7 @@ class UploadImageForm(forms.Form):
                                'class': 'form-control'})
 
 
-def index(request):
+def lab1(request):
     image = None
     image_size = None
     rgb_plots = [None, None, None]
@@ -48,7 +51,47 @@ def index(request):
                'blue_plot': rgb_plots[2],
                'luminosity_plot': luminosity_plot,
                'image_form': image_form}
-    return render(request, 'index.html', context)
+    return render(request, 'lab1.html', context)
+
+
+def lab2(request):
+    image = None
+    image_size = None
+
+    if request.method == 'POST':
+        image_form = UploadImageForm(request.POST, request.FILES)
+        if image_form.is_valid():
+            file = request.FILES['image'].file
+            image = 'data:image/png;base64,' + urllib.parse.quote(base64.b64encode(file.read()))
+            image_size = Image.open(file).size
+            image_size = f'{image_size[0]}x{image_size[1]}'
+    else:
+        image_form = UploadImageForm()
+
+    context = {'image': image,
+               'image_size': image_size,
+               'image_form': image_form}
+    return render(request, 'lab2.html', context)
+
+
+def lab3(request):
+    image = None
+    image_size = None
+
+    if request.method == 'POST':
+        image_form = UploadImageForm(request.POST, request.FILES)
+        if image_form.is_valid():
+            file = request.FILES['image'].file
+            image = 'data:image/png;base64,' + urllib.parse.quote(base64.b64encode(file.read()))
+            image_size = Image.open(file).size
+            image_size = f'{image_size[0]}x{image_size[1]}'
+    else:
+        image_form = UploadImageForm()
+
+    context = {'image': image,
+               'image_size': image_size,
+               'image_form': image_form}
+    return render(request, 'lab3.html', context)
 
 
 def processing(request):

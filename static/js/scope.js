@@ -1,17 +1,15 @@
-let imageCanvas;
-
 $(document).ready(function () {
-    let image = document.getElementById('image');
-    imageCanvas = getImageCanvas(image);
-    fillScopeCanvas();
+    if (image) {
+        fillScopeCanvas();
 
-    $('#image').mousemove(function (e) {
-        let x = e.pageX - image.offsetLeft;
-        let y = e.pageY - image.offsetTop;
-        let pixels = changeScope(x, y);
-        updateCenterPixelInfo(x, y);
-        updateScopeInfo(image, x, y, pixels);
-    })
+        $('#image').mousemove(function (e) {
+            let x = e.pageX - image.offsetLeft;
+            let y = e.pageY - image.offsetTop;
+            let pixels = changeScope(x, y);
+            updateCenterPixelInfo(x, y);
+            updateScopeInfo(image, x, y, pixels);
+        })
+    }
 });
 
 function fillScopeCanvas() {

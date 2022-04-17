@@ -1,13 +1,12 @@
 import base64
 import io
-import math
 from urllib.parse import quote
 
-from PIL import Image, ImageDraw
+from PIL import Image
 import numpy as np
 
-import base.chromaticity as chroma
-import base.blurring as blur
+import base.lab2.chromaticity as chroma
+import base.lab2.blurring as blur
 
 
 def get_image_as_string(image: Image) -> str:

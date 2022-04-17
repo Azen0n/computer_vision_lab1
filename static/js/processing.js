@@ -1,10 +1,3 @@
-const image = document.getElementById('image');
-const canvas = document.getElementById('processed_image_canvas');
-canvas.width = image.width;
-canvas.height = image.height;
-const ctx = canvas.getContext('2d');
-
-
 function flipVertically() {
     for (let i = 0; i < image.width; i++) {
         for (let j = 0; j < image.height; j++) {

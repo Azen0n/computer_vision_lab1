@@ -1,7 +1,7 @@
 from PIL import Image
 
-from base.blurring import gaussian_filter, sigma_filter
-from base.lab2_processing import mean_absolute_error, mean_squared_error, unsharp_masking
+from base.lab2.blurring import gaussian_filter, sigma_filter
+from base.lab2.lab2_processing import mean_absolute_error, mean_squared_error, unsharp_masking
 
 
 def gaussian(image: Image):
@@ -72,7 +72,7 @@ def main():
     # gaussian(noised_image)
     # sigma(noised_image)
 
-    image = Image.open('Prague.png')
+    image = Image.open('../Prague.png')
     sharpening(image)
 
 

@@ -1,0 +1,424 @@
+{% extends 'basic.html' %}
+{% load static %}
+
+{% block title %}
+Лаб. работа №2
+{% endblock %}
+
+{% block content %}
+<p class="mt-5"><b>Chromaticity</b></p>
+
+<div class="row">
+    <div class="col text-start">
+        <label class="col-form-label">Log Transformation</label>
+    </div>
+    <div class="col-7 text-end">
+        <button class="btn btn-outline-primary w-100" type="submit" id="logBtn">
+            Transform
+        </button>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Backward Log Transformation</label>
+    </div>
+    <div class="col-7 text-end">
+        <button class="btn btn-outline-primary w-100" type="submit" id="backwardLogBtn">
+            Transform
+        </button>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Power Law Transformation</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="powerLawGroup">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Gamma</span>
+            </div>
+            <input type="text" class="form-control" placeholder="From ??? to ???" id="powerLawInput">
+            <button class="btn btn-outline-primary" type="submit" id="powerLawBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Binary Transformation</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="binaryGroup">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Threshold</span>
+            </div>
+            <input type="text" class="form-control" placeholder="From 0 to 255" id="binaryInput">
+            <button class="btn btn-outline-primary" type="submit" id="binaryBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Bit Plane Slicing</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="bitPlaneSlicingGroup">
+            <input type="text" class="form-control" placeholder="From 8 to 1" id="bitPlaneSlicingInput">
+            <button class="btn btn-outline-primary" type="submit" id="bitPlaneSlicingBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Cutting Out Intensity Range</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="cuttingOutIntensityRangeGroup">
+            <input type="text" class="form-control" placeholder="From 0 to 255"
+                   id="cuttingOutIntensityRangeStartInput">
+            <input type="text" class="form-control" placeholder="From start to 255"
+                   id="cuttingOutIntensityRangeEndInput">
+            <input type="text" class="form-control" placeholder="Default Empty"
+                   id="cuttingOutIntensityRangeConstantValueInput">
+            <button class="btn btn-outline-primary" type="submit" id="cuttingOutIntensityRangeBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<p class="mt-5"><b>Blurring</b></p>
+
+<div class="row">
+    <div class="col text-start">
+        <label class="col-form-label">Square Filter</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="squareFilterGroup">
+            <select class="form-select" id="squareFilterInput">
+                <option selected>Select kernel size</option>
+                <option value="3">3x3</option>
+                <option value="5">5x5</option>
+            </select>
+            <button class="btn btn-outline-primary" type="submit" id="squareFilterBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Median Filter</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="medianFilterGroup">
+            <select class="form-select" id="medianFilterInput">
+                <option selected>Select kernel size</option>
+                <option value="3">3x3</option>
+                <option value="5">5x5</option>
+            </select>
+            <button class="btn btn-outline-primary" type="submit" id="medianFilterBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Gaussian Filter</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="gaussianFilterGroup">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Sigma</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Greater than 0"
+                   id="gaussianFilterInput">
+            <button class="btn btn-outline-primary" type="submit" id="gaussianFilterBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Sigma Filter</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="sigmaFilterGroup">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Sigma</span>
+            </div>
+            <input type="text" class="form-control" placeholder=">0"
+                   id="sigmaFilterInput">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Kernel Size</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Odd >0"
+                   id="sigmaFilterKernelSizeInput">
+            <button class="btn btn-outline-primary" type="submit" id="sigmaFilterBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<p class="mt-5"><b>Sharpening</b></p>
+
+<div class="row">
+    <div class="col text-start">
+        <label class="col-form-label">Unsharp Masking</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="unsharpMaskingGroup1">
+            <select class="form-select" id="unsharpMaskingInput1">
+                <option selected>Select filter</option>
+                <option value="square_filter">Square Filter</option>
+                <option value="median_filter">Median Filter</option>
+            </select>
+            <input type="text" class="form-control" placeholder="From -1"
+                   id="unsharpMaskingContrastInput1">
+            <select class="form-select" id="unsharpMaskingKernelInput">
+                <option selected>Select kernel size</option>
+                <option value="3">3x3</option>
+                <option value="5">5x5</option>
+            </select>
+
+            <button class="btn btn-outline-primary" type="submit" id="unsharpMaskingBtn1">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start"></div>
+    <div class="col-7 text-end">
+        <div class="input-group" id="unsharpMaskingGroup2">
+            <select class="form-select" id="unsharpMaskingInput2">
+                <option selected>Select filter</option>
+                <option value="gaussian_filter">Gaussian Filter</option>
+                <option value="sigma_filter">Sigma Filter</option>
+            </select>
+            <input type="text" class="form-control" placeholder="Lambda"
+                   id="unsharpMaskingContrastInput2">
+            <input type="text" class="form-control" placeholder="Sigma" id="unsharpMaskingSigmaInput">
+            <input type="text" class="form-control" placeholder="Kernel Size" id="unsharpMaskingKernelInput2">
+
+            <button class="btn btn-outline-primary" type="submit" id="unsharpMaskingBtn2">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start"></div>
+    <div class="col-7 text-end">
+        <div class="btn-group w-100" role="group" id="metricGroup">
+            <button class="btn btn-outline-primary" type="submit" id="DeltaBtn">
+                Delta
+            </button>
+            <button class="btn btn-outline-primary" type="submit" id="MSEBtn">
+                MSE
+            </button>
+            <button class="btn btn-outline-primary" type="submit" id="MAEBtn">
+                MAE
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Noise</label>
+    </div>
+    <div class="col-7 text-end">
+        <button class="btn btn-outline-primary w-100" type="submit" id="noiseBtn">
+            Add
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    if (image) {
+        document.getElementById('MSEBtn').addEventListener('click', function () {
+            metricInfo('mean_squared_error');
+        });
+
+        document.getElementById('MAEBtn').addEventListener('click', function () {
+            metricInfo('mean_absolute_error');
+        });
+
+        document.getElementById('DeltaBtn').addEventListener('click', function () {
+            metricInfo('delta');
+        });
+
+        document.getElementById('logBtn').addEventListener('click', function () {
+            getProcessedImage('log/', 'log');
+        });
+
+        document.getElementById('backwardLogBtn').addEventListener('click', function () {
+            getProcessedImage('backward_log/', 'backward_log');
+        });
+
+        document.getElementById('powerLawBtn').addEventListener('click', function () {
+            let param = parseInt(document.getElementById('powerLawInput').value);
+            getProcessedImage('power_law/', 'power_law', param);
+        });
+
+        document.getElementById('binaryBtn').addEventListener('click', function () {
+            let param = parseInt(document.getElementById('binaryInput').value);
+            getProcessedImage('binary/', 'binary', param);
+        });
+
+        document.getElementById('bitPlaneSlicingBtn').addEventListener('click', function () {
+            let param = parseInt(document.getElementById('bitPlaneSlicingInput').value);
+            getProcessedImage('bit_plane_slicing/', 'bit_plane_slicing', param);
+        });
+
+        document.getElementById('squareFilterBtn').addEventListener('click', function () {
+            let param = parseInt(document.getElementById('squareFilterInput').value);
+            getProcessedImage('square_filter/', 'square_filter', param);
+        });
+
+        document.getElementById('medianFilterBtn').addEventListener('click', function () {
+            let param = parseInt(document.getElementById('medianFilterInput').value);
+            getProcessedImage('median_filter/', 'median_filter', param);
+        });
+
+        document.getElementById('cuttingOutIntensityRangeBtn').addEventListener('click', function () {
+            let start = parseInt(document.getElementById('cuttingOutIntensityRangeStartInput').value);
+            let end = parseInt(document.getElementById('cuttingOutIntensityRangeEndInput').value);
+            let constantValue = parseInt(document.getElementById('cuttingOutIntensityRangeConstantValueInput').value);
+            if (isNaN(constantValue)) {
+                getProcessedImage('cutting_out_intensity_range/', 'cutting_out_intensity_range', [start, end]);
+            } else {
+                getProcessedImage('cutting_out_intensity_range/', 'cutting_out_intensity_range', [start, end, constantValue]);
+            }
+        });
+
+        document.getElementById('gaussianFilterBtn').addEventListener('click', function () {
+            let param = parseFloat(document.getElementById('gaussianFilterInput').value);
+            getProcessedImage('gaussian_filter/', 'gaussian_filter', param);
+        });
+
+        document.getElementById('sigmaFilterBtn').addEventListener('click', function () {
+            let sigma = parseFloat(document.getElementById('sigmaFilterInput').value);
+            let kernelSize = parseFloat(document.getElementById('sigmaFilterKernelSizeInput').value);
+            getProcessedImage('sigma_filter/', 'sigma_filter', [sigma, kernelSize]);
+        });
+
+        document.getElementById('unsharpMaskingBtn1').addEventListener('click', function () {
+            let method = document.getElementById('unsharpMaskingInput1').value;
+            let contrast = parseInt(document.getElementById('unsharpMaskingContrastInput1').value);
+            let kernel = parseInt(document.getElementById('unsharpMaskingKernelInput').value);
+            getProcessedImage('unsharp_masking/', 'unsharp_masking', [contrast, method, kernel]);
+        });
+
+        document.getElementById('unsharpMaskingBtn2').addEventListener('click', function () {
+            let method = document.getElementById('unsharpMaskingInput2').value;
+            let contrast = parseFloat(document.getElementById('unsharpMaskingContrastInput2').value);
+            let sigma = parseFloat(document.getElementById('unsharpMaskingSigmaInput').value);
+            let kernelSize = parseFloat(document.getElementById('unsharpMaskingKernelInput2').value);
+
+            if (isNaN(kernelSize)) {
+                getProcessedImage('unsharp_masking/', 'unsharp_masking', [contrast, method, sigma]);
+            } else {
+                getProcessedImage('unsharp_masking/', 'unsharp_masking', [contrast, method, sigma, kernelSize]);
+            }
+        });
+
+        document.getElementById('noiseBtn').addEventListener('click', function () {
+            getProcessedImage('noise/', 'noise');
+        });
+    }
+
+    function getProcessedImage(url, method, param = null) {
+        imageCanvas.toBlob(function (blob) {
+            let data = new FormData();
+            data.append('image', blob, 'image.png');
+            data.append('method', method);
+            if (param !== null) {
+                data.append('param', param);
+            }
+            console.log(new Date().toLocaleTimeString());
+            ajaxPost(url, data);
+        });
+    }
+
+    function ajaxPost(url, data) {
+        $.ajax({
+            method: 'POST',
+            url: url,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            data: data,
+            processData: false,
+            contentType: false,
+            mimeType: 'multipart/form-data',
+            success: function (response) {
+                let img = JSON.parse(response)['image'];
+                let processedImage = new Image();
+                processedImage.onload = function () {
+                    ctx.drawImage(processedImage, 0, 0);
+                };
+                processedImage.src = img;
+                console.log(data.get('method') + ' - success ' + new Date().toLocaleTimeString());
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function metricInfo(metric) {
+        let data = new FormData();
+        data.append('metric', metric);
+
+        imageCanvas.toBlob(function (blob) {
+            data.append('image', blob, 'image.png');
+
+            const processedImageCanvas = document.getElementById('processed_image_canvas');
+            processedImageCanvas.toBlob(function (blob) {
+                data.append('processedImage', blob, 'processedImage.png');
+
+                $.ajax({
+                    method: 'POST',
+                    url: 'metric/',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    mimeType: 'multipart/form-data',
+                    success: function (response) {
+                        let ans = JSON.parse(response)['ans'];
+                        console.log('metric "' + data.get('metric') + '" - success ' + new Date().toLocaleTimeString() + ' : ' + ans);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    }
+</script>
+{% endblock %}

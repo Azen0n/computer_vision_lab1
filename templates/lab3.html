@@ -1,0 +1,123 @@
+{% extends 'basic.html' %}
+{% load static %}
+
+{% block title %}
+Лаб. работа №3
+{% endblock %}
+
+{% block content %}
+<p class="mt-5"><b>Edge detection</b></p>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">Sobel</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group">
+            <select class="form-select" id="sobelKernel">
+                <option selected>Select kernel size</option>
+                <option value="3">3x3</option>
+                <option value="5">5x5</option>
+                <option value="7">7x7</option>
+            </select>
+            <button class="btn btn-outline-primary" type="submit" id="sobelBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">LoG</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Sigma</span>
+            </div>
+            <input type="text" class="form-control" placeholder="(0; +∞)" id="LoGSigma">
+            <button class="btn btn-outline-primary" type="submit" id="LoGBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col text-start">
+        <label class="col-form-label">DoG</label>
+    </div>
+    <div class="col-7 text-end">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Sigma</span>
+            </div>
+            <input type="text" class="form-control" placeholder="(0; +∞)" id="DoGSigma">
+            <button class="btn btn-outline-primary" type="submit" id="DoGBtn">
+                Transform
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    if (image) {
+        document.getElementById('sobelBtn').addEventListener('click', function () {
+            let param = parseInt(document.getElementById('sobelKernel').value);
+            getProcessedImage('sobel/', 'sobel', param);
+        });
+
+        document.getElementById('LoGBtn').addEventListener('click', function () {
+            let param = parseFloat(document.getElementById('LoGSigma').value);
+            getProcessedImage('laplacian_of_gaussian/', 'laplacian_of_gaussian', param);
+        });
+
+        document.getElementById('DoGBtn').addEventListener('click', function () {
+            let param = parseFloat(document.getElementById('DoGSigma').value);
+            getProcessedImage('difference_of_gaussian/', 'difference_of_gaussian', param);
+        });
+    }
+
+    function getProcessedImage(url, method, param = null) {
+        imageCanvas.toBlob(function (blob) {
+            let data = new FormData();
+            data.append('image', blob, 'image.png');
+            data.append('method', method);
+            if (param !== null) {
+                data.append('param', param);
+            }
+            console.log(new Date().toLocaleTimeString());
+            ajaxPost(url, data);
+        });
+    }
+
+    function ajaxPost(url, data) {
+        $.ajax({
+            method: 'POST',
+            url: url,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            data: data,
+            processData: false,
+            contentType: false,
+            mimeType: 'multipart/form-data',
+            success: function (response) {
+                let img = JSON.parse(response)['image'];
+                let processedImage = new Image();
+                processedImage.onload = function () {
+                    ctx.drawImage(processedImage, 0, 0);
+                };
+                processedImage.src = img;
+                console.log(data.get('method') + ' - success ' + new Date().toLocaleTimeString());
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+</script>
+{% endblock %}
