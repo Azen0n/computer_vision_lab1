@@ -7,10 +7,11 @@ from django.shortcuts import render
 from . import plots
 from django import forms
 
-from base.lab2.lab2_processing import methods as methods2, get_image_as_string, mean_squared_error, mean_absolute_error, delta
+from base.lab2.lab2_processing import methods as methods, get_image_as_string, mean_squared_error, mean_absolute_error, delta
 from base.lab3 import methods as methods3
 
-methods = dict(methods2).update(methods3)
+
+methods.update(methods3)
 
 
 class PlotForm(forms.Form):
