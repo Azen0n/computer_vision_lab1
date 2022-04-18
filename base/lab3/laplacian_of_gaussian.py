@@ -26,11 +26,3 @@ def laplacian_of_gaussian(image: Image, size, sigma: float) -> Image:
                     sm += pix[x - i, y - j] * LoG[i][j]
             draw.point((x, y), round(sm))
     return im
-
-
-path = "./2.jpg"
-image = Image.open(path)
-image = image.convert("L")
-height = image.size[1]
-weight = image.size[0]
-laplacian_of_gaussian(image, 5, 1).show()
