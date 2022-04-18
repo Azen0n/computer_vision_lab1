@@ -51,6 +51,10 @@
     <div class="col-7 text-end">
         <div class="input-group">
             <div class="input-group-prepend">
+                <span class="input-group-text">Coef.</span>
+            </div>
+            <input type="text" class="form-control" placeholder="(1; +∞)" id="DoGCoefficient">
+            <div class="input-group-prepend">
                 <span class="input-group-text">Sigma</span>
             </div>
             <input type="text" class="form-control" placeholder="(0; +∞)" id="DoGSigma">
@@ -76,8 +80,9 @@
         });
 
         document.getElementById('DoGBtn').addEventListener('click', function () {
-            let param = parseFloat(document.getElementById('DoGSigma').value);
-            getProcessedImage('difference_of_gaussian/', 'difference_of_gaussian', param);
+            let coefficient = parseFloat(document.getElementById('DoGCoefficient').value);
+            let sigma = parseFloat(document.getElementById('DoGSigma').value);
+            getProcessedImage('difference_of_gaussian/', 'difference_of_gaussian', [coefficient, sigma]);
         });
     }
 
