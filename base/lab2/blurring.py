@@ -20,7 +20,7 @@ def square_filter(image: Image, kernel_size: int) -> Image:
     return new_image
 
 
-def median_filter(image: Image, kernel_size: int) -> str:
+def median_filter(image: Image, kernel_size: int) -> Image:
     """2.1. Медианный фильтр с размерами ядра 3x3 или 5x5."""
     if kernel_size not in [3, 5]:
         raise ValueError('Kernel size must be either 3 or 5.')
@@ -33,7 +33,7 @@ def median_filter(image: Image, kernel_size: int) -> str:
     return new_image
 
 
-def gaussian_filter(image: Image, sigma: float) -> str:
+def gaussian_filter(image: Image, sigma: float) -> Image:
     """2.2. Фильтр Гаусса."""
     image = image.convert('L')
     pixels = np.asarray(image).astype(int)
@@ -43,7 +43,7 @@ def gaussian_filter(image: Image, sigma: float) -> str:
     return new_image
 
 
-def sigma_filter(image: Image, sigma: float, kernel_size: int) -> str:
+def sigma_filter(image: Image, sigma: float, kernel_size: int) -> Image:
     """2.3. Сигма-фильтр."""
 
     image = image.convert('L')
