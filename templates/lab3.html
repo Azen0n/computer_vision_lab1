@@ -34,6 +34,10 @@
     <div class="col-7 text-end">
         <div class="input-group">
             <div class="input-group-prepend">
+                <span class="input-group-text">Kernel size</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Odd" id="LoGKernel">
+            <div class="input-group-prepend">
                 <span class="input-group-text">Sigma</span>
             </div>
             <input type="text" class="form-control" placeholder="(0; +∞)" id="LoGSigma">
@@ -75,8 +79,9 @@
         });
 
         document.getElementById('LoGBtn').addEventListener('click', function () {
-            let param = parseFloat(document.getElementById('LoGSigma').value);
-            getProcessedImage('laplacian_of_gaussian/', 'laplacian_of_gaussian', param);
+            let kernel = parseFloat(document.getElementById('LoGKernel').value);
+            let sigma = parseFloat(document.getElementById('LoGSigma').value);
+            getProcessedImage('laplacian_of_gaussian/', 'laplacian_of_gaussian', [kernel, sigma]);
         });
 
         document.getElementById('DoGBtn').addEventListener('click', function () {
