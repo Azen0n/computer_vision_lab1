@@ -7,10 +7,11 @@ from django.shortcuts import render
 from . import plots
 from django import forms
 
-from base.lab2.lab2_processing import methods as methods2, get_image_as_string, mean_squared_error, mean_absolute_error, delta
+from base.lab2.lab2_processing import methods as methods, get_image_as_string, mean_squared_error, mean_absolute_error, delta
 from base.lab3 import methods as methods3
 
-methods = dict(methods2).update(methods3)
+
+methods.update(methods3)
 
 
 class PlotForm(forms.Form):
@@ -28,7 +29,8 @@ class UploadImageForm(forms.Form):
 
 def lab1(request):
     image = None
-    image_size = None
+    width = None
+    height = None
     rgb_plots = [None, None, None]
     luminosity_plot = None
 
@@ -38,14 +40,16 @@ def lab1(request):
             file = request.FILES['image'].file
             image = 'data:image/png;base64,' + urllib.parse.quote(base64.b64encode(file.read()))
             image_size = Image.open(file).size
-            image_size = f'{image_size[0]}x{image_size[1]}'
+            width = image_size[0]
+            height = image_size[1]
             rgb_plots = plots.get_rgb_plots(file)
             luminosity_plot = plots.get_luminosity_plot(file)
     else:
         image_form = UploadImageForm()
 
     context = {'image': image,
-               'image_size': image_size,
+               'width': width,
+               'height': height,
                'red_plot': rgb_plots[0],
                'green_plot': rgb_plots[1],
                'blue_plot': rgb_plots[2],

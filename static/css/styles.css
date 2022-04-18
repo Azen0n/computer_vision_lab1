@@ -28,3 +28,7 @@ p {
 .footer {
     height: 300px;
 }
+
+.value {
+    font-size: 1em;
+}
